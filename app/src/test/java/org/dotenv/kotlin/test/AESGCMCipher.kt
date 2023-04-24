@@ -2,11 +2,13 @@ package org.dotenv.kotlin.test
 
 import org.junit.Test
 import java.nio.charset.Charset
-import java.security.Key
 import java.security.SecureRandom
 import java.security.spec.KeySpec
 import java.util.*
-import javax.crypto.*
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
@@ -16,6 +18,11 @@ data class CipherResult(
     val encryptedText: ByteArray,
     val iv: ByteArray
 )
+
+fun ByteArray.toHexString() = this.joinToString("") { String.format("%02X", (it.toInt() and 0xFF)) }
+fun String.byteArrayFromHexString() = this.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+
+fun String.fromHexString()=this.chunked(2).map { it.toInt(16).toChar() }.toCharArray().joinToString()
 
 class AESGCMCipher {
 
@@ -74,13 +81,20 @@ class AESGCMCipher {
             AES_cipherInstance.doFinal(encryptedText, 12, encryptedText.size - 12)
         return String(decryptedText, Charset.forName("UTF-8"))
     }
-//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     @Test
     fun verifyStuff() {
         val message = "HELLO"
 //        val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+        val fromHEx = keyString.byteArrayFromHexString()
+        val toHex = fromHEx.toHexString()
+        println("decoded key ${keyString} fromHEx: ${fromHEx} toHex: ${toHex} fromHEx length: ${fromHEx.size}")
+
+        //val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         println("message: $message")
         val messageBytes = message.toByteArray(charset("UTF-8"))
 
@@ -90,10 +104,10 @@ class AESGCMCipher {
         val secretKey2 = create256Key()
         println("key2 bytes: ${secretKey2.encoded} size: ${secretKey2.encoded.size} format: ${secretKey2.format}")
 
-        val keyBytes = keyString.toByteArray(charset("UTF-8"))
+        //val keyBytes = keyString.toByteArray()
 //        val keyBytes = keyString.toCharArray()
-        println("key bytes: ${keyBytes} lenght: ${keyBytes.size}")
-        val secretKey = createKeyFromBytes(keyBytes)
+        println("key bytes: ${fromHEx} lenght: ${fromHEx.size}")
+        val secretKey = createKeyFromBytes(fromHEx)
 
         println("key1 bytes: ${secretKey.encoded} size: ${secretKey.encoded.size} format: ${secretKey.format}")
         //val secretKey = createKeyAESGCM(keyString)
