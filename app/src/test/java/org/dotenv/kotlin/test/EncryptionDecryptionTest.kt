@@ -95,13 +95,9 @@ class EncryptionDecryptionTest {
         iv: ByteArray,
         encryptedData: ByteArray
     ): ByteArray {
-//        val keySpec = PBEKeySpec(password.toCharArray(), salt, PBK_ITERATIONS)
-        val paramSpec = GCMParameterSpec(256, password.toByteArray())
-        val secretKeyFactory: SecretKeyFactory = SecretKeyFactory.getInstance("GCM")
-        //val key: Key = secretKeyFactory.generateSecret(paramSpec)
+        val paramSpec = GCMParameterSpec(128, encryptedData)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        val ivSpec = IvParameterSpec(iv)
-        cipher.init(Cipher.DECRYPT_MODE, key, ivSpec)
+        cipher.init(Cipher.DECRYPT_MODE, key, paramSpec)
         return cipher.doFinal(encryptedData)
     }
 
@@ -209,6 +205,7 @@ class EncryptionDecryptionTest {
     @Test
     fun verifyAESGCMEncryptionWithKey() {
         val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+//        val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         val message = "HELLO"
         val key = generateKey()
         val encrypted = cipherAESGCM256(message.toByteArray(), key)
