@@ -22,20 +22,22 @@ data class CipherResult(
 fun ByteArray.toHexString() = this.joinToString("") { String.format("%02X", (it.toInt() and 0xFF)) }
 fun String.byteArrayFromHexString() = this.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
-fun String.fromHexString()=this.chunked(2).map { it.toInt(16).toChar() }.toCharArray().joinToString()
+fun String.fromHexString2()=this.chunked(2).map { it.toInt(16).toChar() }.toCharArray().joinToString()
+
+private const val ALGORITHM = "AES"
 
 class AESGCMCipher {
 
     fun createKey(): SecretKey {
         val secureKeyRandomness: SecureRandom = SecureRandom.getInstanceStrong()
-        val AES_keyInstance: KeyGenerator = KeyGenerator.getInstance("AES")
+        val AES_keyInstance: KeyGenerator = KeyGenerator.getInstance(ALGORITHM)
         AES_keyInstance.init(128, secureKeyRandomness)
         val secretKey: SecretKey = AES_keyInstance.generateKey()
         return secretKey
     }
 
     fun create256Key(): SecretKey {
-        val keyGenerator = KeyGenerator.getInstance("AES")
+        val keyGenerator = KeyGenerator.getInstance(ALGORITHM)
         keyGenerator.init(256)
         val secretKey = keyGenerator.generateKey()
         return secretKey
@@ -49,8 +51,7 @@ class AESGCMCipher {
     }
 
     fun createKeyFromBytes(keyBytes: ByteArray): SecretKey {
-        val secretKey: SecretKey = SecretKeySpec(keyBytes, "AES")
-        return secretKey
+        return SecretKeySpec(keyBytes, ALGORITHM)
     }
 
     fun createKeyAESGCM(keyString: String): SecretKey {
@@ -58,7 +59,7 @@ class AESGCMCipher {
         val SALT = "abcdefg"
         val spec: KeySpec = PBEKeySpec(keyString.toCharArray(), SALT.toByteArray(), 65536, 256)
         val tmp = factory.generateSecret(spec)
-        val secretKey = SecretKeySpec(tmp.encoded, "AES")
+        val secretKey = SecretKeySpec(tmp.encoded, ALGORITHM)
         return secretKey
     }
 
@@ -87,7 +88,6 @@ class AESGCMCipher {
     @Test
     fun verifyStuff() {
         val message = "HELLO"
-//        val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         val keyString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
         val fromHEx = keyString.byteArrayFromHexString()
@@ -98,7 +98,7 @@ class AESGCMCipher {
         println("message: $message")
         val messageBytes = message.toByteArray(charset("UTF-8"))
 
-        val secretKey0 = getSecureRandomKey("AES", 256)
+        val secretKey0 = getSecureRandomKey(ALGORITHM, 256)
         println("key0 bytes: ${secretKey0.encoded} size: ${secretKey0.encoded.size} format: ${secretKey0.format}")
 
         val secretKey2 = create256Key()
