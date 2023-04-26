@@ -3,6 +3,21 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+
+def envVaultKey = ""
+if (rootProject.file("local.properties").exists()) {
+    // v1 from properties
+    Properties properties = new Properties()
+    properties.load(rootProject.file("local.properties").newDataInputStream())
+    if (properties.containsKey("DOTENV_KEY_DEVELOPMENT"))
+        envVaultKey = properties.getProperty("DOTENV_KEY_DEVELOPMENT")
+    println("v1 vaultKey ${ envVaultKey}")
+} else {
+    // v2 using host system env variable
+    envVaultKey = System.getenv("DOTENV_KEY_DEVELOPMENT")
+    println("v2 vaultKey ${envVaultKey}")
+}
+
 android {
     namespace 'org.dotenv.kotlin.test'
     compileSdk 33
@@ -18,6 +33,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "DOTENV_KEY_DEVELOPMENT", envVaultKey
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -42,7 +60,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Jitpack.io release
 //    implementation 'com.github.marcel-rf:dotenv-vault-kotlin:0.0.1'
-    implementation 'com.github.marcel-rf:dotenv-vault-kotlin:-SNAPSHOT'
+
+    // Jitpack.io snapshot version
+//    implementation 'com.github.marcel-rf:dotenv-vault-kotlin:-SNAPSHOT'
+
+
+    // Maven local
+    implementation 'org.dotenv.vault.kotlin:dotenv-vault-kotlin:0.0.1'
 }
 
