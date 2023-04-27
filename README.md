@@ -9,31 +9,31 @@ Add the jitpack repository to you app's build.gradle or settings.gradle
 
 
 ```
-allprojects {
-		repositories {
-			maven { url 'https://jitpack.io' }
-		}
+repositories {
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
   
  
- #### Add Dependency
- 
-``` 
-dependencies {
-	implementation 'com.github.dotenv-org:dotenv-vault-kotlin:Tag'
-}
+#### Add Dependency
+#### Gradle Groovy DSL
+```groovy
+implementation 'com.github.dotenv-org:dotenv-vault-kotlin:Tag'
 ```
 
-
+#### Gradle Kotlin DSL
+```kotlin
+implementation("com.github.dotenv-org:dotenv-vault-kotlin:Tag")
+``` 
 
 
 ### Running dotenv-vault-kotlin
 
 #### Set your DotenvVault key to your enviroment variables 
-export DOTENV_KEY="dotenv://....."
+`export DOTENV_KEY="dotenv://....."`
 or
-add the key to your local.properties file on Android
+add the key to your `local.properties` file on Android
 
 
 #### Add vault file to your assets folder
