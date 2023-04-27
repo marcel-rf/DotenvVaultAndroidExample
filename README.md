@@ -30,7 +30,7 @@ implementation("com.github.dotenv-org:dotenv-vault-kotlin:Tag")
 
 ### Running dotenv-vault-kotlin
 
-#### Set your DotenvVault key to your enviroment variables 
+#### Set your DotenvVault key to your environment variables
 `export DOTENV_KEY="dotenv://....."`
 or
 add the key to your `local.properties` file on Android
