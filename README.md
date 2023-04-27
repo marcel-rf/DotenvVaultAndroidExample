@@ -9,20 +9,20 @@ Add the jitpack repository to you app's build.gradle or settings.gradle
 
 
 ```
-		allprojects {
-				repositories {
-					maven { url 'https://jitpack.io' }
-				}
-			}
+allprojects {
+		repositories {
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
   
  
  #### Add Dependency
  
 ``` 
-		dependencies {
-			implementation 'com.github.dotenv-org:dotenv-vault-kotlin:Tag'
-		}
+dependencies {
+	implementation 'com.github.dotenv-org:dotenv-vault-kotlin:Tag'
+}
 ```
 
 
