@@ -1,10 +1,12 @@
-# DotenvVaultAndroidExample
+## DotenvVaultAndroidExample
 
 
-## Installing dotenv-vault-kotlin
+### Installing dotenv-vault-kotlin
 
-### Add jitpack Repository
+#### Add jitpack Repository
+
 Add the jitpack repository to you app's build.gradle or settings.gradle
+
 
 `
 	allprojects {
@@ -16,7 +18,8 @@ Add the jitpack repository to you app's build.gradle or settings.gradle
 `
   
  
- ### Add Dependency
+ #### Add Dependency
+ 
 ` 
 	dependencies {
 	        implementation 'com.github.dotenv-org:dotenv-vault-kotlin:Tag'
@@ -40,5 +43,6 @@ Add env.vault (no dot) to your src/assets folder
 
 #### Versions
 Or use the -SNAPSHOT for the latest snapshot version
+
 See all available versions: 
 https://jitpack.io/#dotenv-org/dotenv-vault-kotlin/-SNAPSHOT
