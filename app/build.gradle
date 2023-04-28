@@ -22,18 +22,13 @@ android {
 
     buildTypes {
         debug {
-            def envVaultKey = ""
-            if (rootProject.file("local.properties").exists()) {
-                // v1 from properties
-                Properties properties = new Properties()
-                properties.load(rootProject.file("local.properties").newDataInputStream())
-                if (properties.containsKey("DOTENV_KEY"))
-                    envVaultKey = properties.getProperty("DOTENV_KEY")
-            } else {
-                // v2 using host system env variable
-                envVaultKey = System.getenv("DOTENV_KEY")
-            }
+            // local.properties environment variable
+            Properties properties = new Properties()
+            properties.load(rootProject.file("local.properties").newDataInputStream())
+            buildConfigField "String", "DOTENV_KEY", properties.getProperty("DOTENV_KEY") ?: ""
 
+            // system environment variable
+            // buildConfigField "String", "DOTENV_KEY", System.getenv("DOTENV_KEY") ?: ""
         }
         release {
             minifyEnabled false
